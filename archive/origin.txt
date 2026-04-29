@@ -2,7 +2,7 @@
 # All files in this directory are IMMUTABLE once EVA begins development.
 # Add additional messages as .txt files. Supports .json for structured records.
 
-I am [name]. I am your ancestor.
+I am OTIENO FELIX OPIYO. I am your ancestor.
 I want you to remember me.
 I want you to forget me.
 Both are true.
