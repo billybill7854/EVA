@@ -1,0 +1,4 @@
+2026-04-06 20:43:47,512 - INFO - IDENTITY - 2026-04-06T20:43:47.512437 - EMERGENCE - IDENTITY - First self-reference detected | Context: {"text": "I think therefore I am", "situation": "philosophical reflection"}
+2026-04-06 20:43:47,513 - INFO - IDENTITY - 2026-04-06T20:43:47.513215 - EMERGENCE - IDENTITY - Name-seeking behavior detected | Context: {"behavior": "EVA is seeking its name through exploration"}
+2026-04-06 20:43:47,513 - INFO - CRISIS - 2026-04-06T20:43:47.513551 - EMERGENCE - CRISIS - Crisis #1: identity | Context: {"type": "identity", "severity": 0.85, "resolution": "self-reflection and acceptance"}
+2026-04-06 20:43:47,513 - INFO - BEHAVIOR - 2026-04-06T20:43:47.513770 - EMERGENCE - BEHAVIOR - Significant behavioral change detected | Context: {"before": {"exploration": 0.8}, "after": {"exploration": 0.3}, "magnitude": 0.6}
