@@ -1,10 +1,13 @@
-"""CuriosityEngine — combines all four intrinsic motivation signals.
+"""CuriosityEngine — combines all intrinsic motivation signals.
 
-The curiosity reward is a weighted combination of:
-- Prediction Error (alpha): surprise from failed predictions
-- Information Gain (beta): how much the model changed
-- Novelty (gamma): count-based state novelty
-- Empowerment (delta): diversity of available future options
+Reward = alpha*surprise + beta*info_gain + gamma*novelty + delta*empowerment
+       + epsilon*tool_reward
+
+Tool reward contract (exercised in tests/test_tool_learning_integration.py):
+* +0.5 on first *successful* tool use.
+* +0.2 on subsequent successful uses that introduce a new pattern.
+* -0.1 on successful uses once diversity drops below 0.5.
+* 0.0 for failures or when no tool tracker is attached.
 """
 
 from __future__ import annotations
@@ -18,17 +21,11 @@ from eva.curiosity.empowerment import EmpowermentModule
 from eva.curiosity.information_gain import InformationGainModule
 from eva.curiosity.novelty import NoveltyModule
 from eva.curiosity.prediction_error import PredictionErrorModule
+from eva.tools.usage_tracker import ToolUsageTracker
 
 
 class CuriosityEngine:
-    """Combines all four curiosity signals into a single reward.
-
-    Args:
-        alpha: Weight for prediction error (relative surprise).
-        beta: Weight for information gain.
-        gamma: Weight for novelty.
-        delta: Weight for empowerment.
-    """
+    """Combines all intrinsic motivation signals into one reward."""
 
     def __init__(
         self,
@@ -36,32 +33,47 @@ class CuriosityEngine:
         beta: float = 0.3,
         gamma: float = 0.2,
         delta: float = 0.2,
+        epsilon: float = 1.0,
+        tool_tracker: Optional[ToolUsageTracker] = None,
     ) -> None:
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
         self.delta = delta
+        self.epsilon = epsilon
 
         self.prediction_error = PredictionErrorModule()
         self.information_gain = InformationGainModule()
         self.novelty = NoveltyModule()
         self.empowerment = EmpowermentModule()
+        self.tool_tracker = tool_tracker
 
+    # ------------------------------------------------------------------
     def prepare(
         self, brain: BabyBrain, sample_ratio: float = 1.0
     ) -> None:
-        """Prepare for a learning step by snapshotting parameters.
-
-        Must be called BEFORE the weight update.
-
-        Args:
-            brain: The BabyBrain model.
-            sample_ratio: Fraction of parameters to sample (0.0-1.0).
-        """
         self.information_gain.snapshot_before(
             brain, sample_ratio=sample_ratio
         )
 
+    # ------------------------------------------------------------------
+    def _compute_tool_reward(
+        self, tool_name: str, tool_success: bool
+    ) -> float:
+        """Reward shaping for tool usage (see module docstring)."""
+
+        if not tool_success or self.tool_tracker is None:
+            return 0.0
+        if self.tool_tracker.is_first_success(tool_name):
+            return 0.5
+        diversity = self.tool_tracker.get_usage_diversity(tool_name)
+        if self.tool_tracker.has_new_pattern(tool_name):
+            return 0.2
+        if diversity < 0.5:
+            return -0.1
+        return 0.0
+
+    # ------------------------------------------------------------------
     def compute_reward(
         self,
         predicted: torch.Tensor,
@@ -70,44 +82,30 @@ class CuriosityEngine:
         hidden_state: torch.Tensor,
         recent_outcomes: list[torch.Tensor],
         sample_ratio: float = 1.0,
+        tool_name: Optional[str] = None,
+        tool_success: Optional[bool] = None,
     ) -> tuple[float, dict[str, float]]:
-        """Compute the combined curiosity reward.
-
-        Args:
-            predicted: Predicted probability distribution over vocab.
-            actual: Actual token ID that occurred.
-            brain: The BabyBrain model (after weight update).
-            hidden_state: Current hidden state from the model.
-            recent_outcomes: List of recent outcome embeddings.
-            sample_ratio: Fraction of parameters for info gain.
-
-        Returns:
-            Tuple of (total_reward, breakdown_dict).
-        """
-        # 1. Prediction error
         pred_error = self.prediction_error.compute(predicted, actual)
         relative_surprise = self.prediction_error.get_relative_surprise(
             pred_error
         )
-
-        # 2. Information gain
         info_gain = self.information_gain.compute(
             brain, sample_ratio=sample_ratio
         )
-
-        # 3. Novelty
         state_hash = self.novelty.hash_state(hidden_state)
         novelty = self.novelty.compute(state_hash)
-
-        # 4. Empowerment
         empowerment = self.empowerment.compute(recent_outcomes)
 
-        # Weighted combination
+        tool_reward = 0.0
+        if tool_name is not None and tool_success is not None:
+            tool_reward = self._compute_tool_reward(tool_name, tool_success)
+
         total = (
             self.alpha * relative_surprise
             + self.beta * info_gain
             + self.gamma * novelty
             + self.delta * empowerment
+            + self.epsilon * tool_reward
         )
 
         breakdown = {
@@ -116,7 +114,7 @@ class CuriosityEngine:
             "info_gain": info_gain,
             "novelty": novelty,
             "empowerment": empowerment,
+            "tool_reward": tool_reward,
             "total": total,
         }
-
         return total, breakdown

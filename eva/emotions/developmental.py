@@ -131,7 +131,6 @@ class DevelopmentalEmotions:
             return None
 
         danger = self._emotions[emotion]["danger"]
-        breaker = self._emotions[emotion]["breaker"]
 
         # Check against perseveration limit
         limit = self._get_attr_or_item(config, "perseveration_limit", 50)

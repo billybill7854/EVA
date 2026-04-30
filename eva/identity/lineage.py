@@ -25,7 +25,7 @@ class LineageTracker:
 
     def _load_tree(self) -> dict[str, Any]:
         if self._tree_file.exists():
-            with open(self._tree_file, "r") as f:
+            with open(self._tree_file) as f:
                 return json.load(f)
         return {"individuals": {}, "next_id": 1}
 

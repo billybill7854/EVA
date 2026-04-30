@@ -21,7 +21,6 @@ from eva.core.tokenizer import (
     EVATokenizer,
 )
 
-
 # --- Config Tests ---
 
 class TestEVAConfig:

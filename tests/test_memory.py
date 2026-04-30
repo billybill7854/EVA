@@ -1,7 +1,7 @@
 """Tests for eva/memory modules."""
 
-import torch
 import pytest
+import torch
 
 from eva.memory.episodic import Episode, EpisodicMemory
 

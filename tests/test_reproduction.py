@@ -63,8 +63,9 @@ class TestBirthProcess:
     def test_create_first_generation(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             # Create a minimal config
-            import yaml
             import os
+
+            import yaml
 
             config_data = {
                 "model": {
@@ -103,8 +104,9 @@ class TestBirthProcess:
 
     def test_create_child(self):
         with tempfile.TemporaryDirectory() as tmpdir:
-            import yaml
             import os
+
+            import yaml
 
             config_data = {
                 "model": {

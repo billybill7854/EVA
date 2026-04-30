@@ -177,7 +177,7 @@ class TrainingLoop:
             Dictionary of training statistics.
         """
         self.brain.train()
-        sequence = self.environment.reset()
+        self.environment.reset()
         total_reward = 0.0
         total_loss = 0.0
         correct_predictions = 0
@@ -205,7 +205,7 @@ class TrainingLoop:
             warmup_steps,
         )
 
-        for step_i in tqdm(range(num_steps), desc="Training"):
+        for _step_i in tqdm(range(num_steps), desc="Training"):
             self._step += 1
             self._steps_active += 1
             self._steps_since_social += 1
@@ -213,7 +213,7 @@ class TrainingLoop:
             # Get current context
             context = self.environment.get_current_sequence()
             if len(context) < 2:
-                sequence = self.environment.reset()
+                self.environment.reset()
                 context = self.environment.get_current_sequence()
                 if len(context) < 2:
                     continue

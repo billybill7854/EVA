@@ -7,9 +7,7 @@ Covenant requirement: no layer pretends to be another.
 
 from __future__ import annotations
 
-import string
 from typing import Optional
-
 
 # Special token IDs
 PAD_ID = 0

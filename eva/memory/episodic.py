@@ -8,8 +8,7 @@ Supports similarity-based recall and rest-period consolidation
 from __future__ import annotations
 
 import heapq
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 
 import torch
 import torch.nn.functional as F

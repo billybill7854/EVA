@@ -9,8 +9,6 @@ from __future__ import annotations
 import logging
 from typing import Any, Optional
 
-import torch
-
 from eva.core.baby_brain import BabyBrain
 from eva.core.config import EVAConfig
 from eva.identity.lineage import LineageTracker

@@ -8,13 +8,8 @@ are always logged — never silent.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from eva.core.tokenizer import (
-    ANCESTOR_ID,
-    HUMAN_ID,
-    SCAFFOLD_ID,
-    SELF_ID,
     SOURCE_TOKEN_MAP,
     EVATokenizer,
 )

@@ -2,3 +2,7 @@ torch>=2.0
 numpy
 pyyaml
 tqdm
+# UI extras (optional; install with `pip install -e ".[ui]"`)
+# fastapi>=0.110
+# uvicorn>=0.29
+# websockets>=12
