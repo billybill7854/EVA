@@ -5,7 +5,7 @@ import tempfile
 
 import pytest
 
-from eva.core.tokenizer import EVATokenizer, HUMAN_ID, SCAFFOLD_ID, ANCESTOR_ID
+from eva.core.tokenizer import ANCESTOR_ID, HUMAN_ID, SCAFFOLD_ID, EVATokenizer
 from eva.emotions.affect import AffectiveState
 from eva.guidance.ancestor_archive import AncestorArchive
 from eva.guidance.caregiver import AICaregiver

@@ -1,0 +1,84 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eva-life"
+version = "0.2.0"
+description = "EVA — a self-evolving digital life species that grows its own brain, memory, and tools."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "See LICENSE / README" }
+authors = [{ name = "EVA contributors" }]
+dependencies = [
+  "torch>=2.0",
+  "numpy",
+  "pyyaml",
+  "tqdm",
+]
+
+[project.optional-dependencies]
+ui = [
+  "fastapi>=0.110",
+  "uvicorn>=0.29",
+  "websockets>=12",
+]
+dev = [
+  "pytest>=8",
+  "ruff>=0.6",
+  "mypy>=1.10",
+]
+
+[project.scripts]
+eva = "run:main"
+eva-train = "scripts.train:main"
+eva-interact = "scripts.interact:main"
+eva-evaluate = "scripts.evaluate:main"
+eva-reproduce = "scripts.reproduce:main"
+
+[tool.setuptools]
+packages = [
+  "eva",
+  "eva.autonomy",
+  "eva.core",
+  "eva.curiosity",
+  "eva.emotions",
+  "eva.environment",
+  "eva.evolution",
+  "eva.guidance",
+  "eva.identity",
+  "eva.memory",
+  "eva.reproduction",
+  "eva.tools",
+  "eva.training",
+  "eva.transparency",
+  "eva.ui",
+]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"eva.ui" = ["static/*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "W"]
+ignore = [
+  "E501",  # long lines are sometimes unavoidable (docstrings with code)
+  "B008",  # default-arg mutable warnings trip on dataclasses a lot
+  "UP007", # Optional[] is still readable in this codebase
+  "UP045", # keep X | None -> Optional[X] for older-python friendliness
+]
+
+[tool.ruff.lint.per-file-ignores]
+# tests are expressive — allow unused imports, shadowing,
+# unused loop variables, unused locals and ambiguous short names.
+"tests/*" = ["F401", "F811", "B007", "F841", "E741", "B905"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+  "ignore::DeprecationWarning",
+]

@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import logging
 import random
-import string
 from typing import Any
 
 from eva.core.tokenizer import EVATokenizer

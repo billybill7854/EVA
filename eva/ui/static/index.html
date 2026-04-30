@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EVA — Digital Life Species</title>
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>EVA</h1>
+      <span class="tag" id="tag-device">device?</span>
+      <span class="tag" id="tag-step">step 0</span>
+      <span class="tag" id="tag-params">0 params</span>
+      <span class="tag" id="tag-ram">? MB</span>
+      <span class="tag pulse" id="tag-live">connecting…</span>
+    </div>
+    <div class="controls">
+      <button id="btn-voice" title="Toggle voice input">🎤 voice</button>
+      <button id="btn-speak" title="Toggle voice output">🔈 speak</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="pane" id="pane-thoughts">
+      <h2>Thoughts</h2>
+      <div class="subtitle">Raw stream from the brain — includes noise.</div>
+      <ul id="thought-stream" class="stream"></ul>
+    </section>
+
+    <section class="pane pane-middle">
+      <h2>Conversation</h2>
+      <div id="conversation" class="conversation"></div>
+      <form id="chat-form" class="chat-form">
+        <input
+          id="chat-input"
+          type="text"
+          autocomplete="off"
+          placeholder="Speak or type. EVA listens for 'hello', 'why', 'show me'…"
+        />
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+    <section class="pane" id="pane-right">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="insights">Insights</button>
+        <button class="tab" data-tab="memory">Memory</button>
+        <button class="tab" data-tab="evolution">Evolution</button>
+        <button class="tab" data-tab="tools">Tools</button>
+      </div>
+      <div class="tab-content" id="tab-insights">
+        <div class="subtitle">
+          Signal vs noise — each insight shows a confidence badge.
+        </div>
+        <ul id="insight-list" class="stream"></ul>
+      </div>
+      <div class="tab-content hidden" id="tab-memory">
+        <div class="subtitle">Permanent episodic memory (SQLite-backed).</div>
+        <ul id="memory-list" class="stream"></ul>
+      </div>
+      <div class="tab-content hidden" id="tab-evolution">
+        <div class="subtitle">Genome + brain-growth history.</div>
+        <ul id="evolution-list" class="stream"></ul>
+      </div>
+      <div class="tab-content hidden" id="tab-tools">
+        <div class="subtitle">
+          Tools available right now. (Acquisition requires approval.)
+        </div>
+        <ul id="tool-list" class="stream"></ul>
+      </div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

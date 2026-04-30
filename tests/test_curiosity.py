@@ -1,13 +1,13 @@
 """Tests for eva/curiosity modules."""
 
-import torch
 import pytest
+import torch
 
 from eva.core.baby_brain import BabyBrain
-from eva.curiosity.prediction_error import PredictionErrorModule
+from eva.curiosity.empowerment import EmpowermentModule
 from eva.curiosity.information_gain import InformationGainModule
 from eva.curiosity.novelty import NoveltyModule
-from eva.curiosity.empowerment import EmpowermentModule
+from eva.curiosity.prediction_error import PredictionErrorModule
 from eva.curiosity.reward import CuriosityEngine
 
 

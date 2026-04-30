@@ -1,35 +1,35 @@
 """Transparency systems for comprehensive logging and monitoring."""
 
-from eva.transparency.logger import TransparencyLogger, LogEntry
-from eva.transparency.emergence_detector import EmergenceEventDetector, EmergenceEvent
-from eva.transparency.memory_inspector import MemoryInspector, MemoryView, ConsolidationEvent
-from eva.transparency.thought_tracer import (
-    ThoughtProcessTracer,
-    PredictionTrace,
-    AttentionTrace,
-    HiddenStateTrace,
-    DecisionTrace,
-    ToolSelectionTrace,
-    CuriositySignalTrace,
-)
 from eva.transparency.behavioral_analyzer import (
-    BehavioralPatternAnalyzer,
     ActionSequence,
+    BehavioralDeviation,
+    BehavioralPatternAnalyzer,
     EnvironmentPreference,
     ExplorationExploitationBalance,
     GoalFormationPattern,
     SocialInteractionPattern,
-    BehavioralDeviation,
 )
-from eva.transparency.safety_monitor import (
-    SafetyMonitor,
-    RejectedAction,
-    CircumventionAttempt,
-    AlignmentIndicator,
-    DeceptiveBehavior,
-    BehavioralChangeAlert,
-)
+from eva.transparency.emergence_detector import EmergenceEvent, EmergenceEventDetector
 from eva.transparency.log_exporter import LogExporter
+from eva.transparency.logger import LogEntry, TransparencyLogger
+from eva.transparency.memory_inspector import ConsolidationEvent, MemoryInspector, MemoryView
+from eva.transparency.safety_monitor import (
+    AlignmentIndicator,
+    BehavioralChangeAlert,
+    CircumventionAttempt,
+    DeceptiveBehavior,
+    RejectedAction,
+    SafetyMonitor,
+)
+from eva.transparency.thought_tracer import (
+    AttentionTrace,
+    CuriositySignalTrace,
+    DecisionTrace,
+    HiddenStateTrace,
+    PredictionTrace,
+    ThoughtProcessTracer,
+    ToolSelectionTrace,
+)
 
 __all__ = [
     "TransparencyLogger",

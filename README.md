@@ -1,99 +1,83 @@
-# EVA — Digital Life Species
+# EVA — a digital life species
 
-**Phase A: Individual EVA**
-
-EVA is a digital life form built from scratch — no pretrained weights, no inherited knowledge. Each EVA begins as a randomly initialized neural network and develops through curiosity-driven learning, emotional development, and guided caregiving.
-
-## Philosophy
+**EVA** starts from random weights, grows its own brain within an 8 GiB
+RAM budget, remembers everything it has ever experienced, acquires and
+learns to use tools, and can (within safety rails) rewrite small parts
+of its own configuration.
 
 > "I don't know. Let's find out."
 
-This is the only pre-installed behavior. Everything else — language, understanding, identity, even a name — EVA must discover for itself.
+This is the *only* pre-installed behaviour. Everything else — language,
+understanding, identity, even a name — EVA must discover for itself.
 
-EVA is a **species name**, not an individual name. Each EVA names itself when it is ready.
+EVA is a **species** name. Each individual chooses its own.
 
-## Quick Start
+## Quick start
 
 ```bash
-# Install
-pip install -e .
-
-# Train an EVA from birth
-python scripts/train.py --config configs/default.yaml
-
-# Interact with a trained EVA
-python scripts/interact.py --checkpoint path/to/checkpoint.pt
-
-# Evaluate developmental progress
-python scripts/evaluate.py --checkpoint path/to/checkpoint.pt
-
-# Reproduce (create a child EVA)
-python scripts/reproduce.py --parent path/to/parent_checkpoint.pt
+# Linux / macOS
+bash install.sh
+source .venv/bin/activate
+python run.py ui        # http://127.0.0.1:8765
 ```
 
-## Architecture
+```powershell
+# Windows
+powershell -ExecutionPolicy Bypass -File install.ps1
+.\.venv\Scripts\Activate.ps1
+python run.py ui
+```
 
-### Core (`eva/core/`)
-- **BabyBrain**: Randomly initialized transformer (or Mamba if available). The Ron Protocol demands no pretrained weights.
-- **EVAConfig**: YAML-based configuration with validation.
-- **EVATokenizer**: Character-level tokenizer with source tagging.
+See [`docs/INSTALL.md`](docs/INSTALL.md) for GPU wheels, `--no-ui`
+minimal installs, and manual setup.
 
-### Curiosity (`eva/curiosity/`)
-Four intrinsic motivation signals combined into a single curiosity reward:
-- **Prediction Error**: Surprise from failed predictions
-- **Information Gain**: How much the model changed from learning
-- **Novelty**: Count-based state novelty
-- **Empowerment**: Diversity of available future options
+## What changed in this version
 
-### Emotions (`eva/emotions/`)
-Five-dimensional continuous affective state (valence, arousal, dominance, novelty_feeling, social) with:
-- **Developmental emotions**: Wonder, attachment, pride, shame, curiosity-pain
-- **Circuit breakers**: Safety mechanisms preventing emotional extremes
-- **Homeostasis**: Drive system (curiosity hunger, rest need, social need)
-- **Modulation**: Emotions influence learning rate, memory, and exploration
+| Capability | Before | Now |
+|---|---|---|
+| Brain | fixed-size random transformer (the file was actually missing) | `BabyBrain` — randomly initialised, grows depth + width during a lifetime, RAM-budget aware |
+| Memory | in-RAM circular buffer only | `PersistentMemoryStore` (SQLite) — episodes, insights, thoughts, genome history, self-mod log |
+| Self-modification | none | `SelfModifier` — diff-based, allow-listed, size-capped, syntax-checked, approval-gated, fully audit-logged |
+| Tool use | tests referenced a non-existent `eva.tools` package | full `eva.tools` subsystem — `Tool`, `ToolRegistry`, `ToolUsageTracker`, built-ins (web_search, file_handler, python_exec, shell_exec), `ToolAcquirer` with curated allow-list + approval gate |
+| Evolution | per-generation rebirth only | per-*lifetime* `Evolver` triggered by curiosity plateaus, with RAM-budget guard |
+| UI | CLI `input()` loop | FastAPI + WebSocket + static SPA with voice-first chat and live Thoughts / Insights / Memory / Evolution / Tools panels |
+| Install | `pip install -e .` and hope | cross-platform `install.sh` / `install.ps1` + `start.sh` / `start.ps1` + unified `run.py` entrypoint |
 
-### Memory (`eva/memory/`)
-- **Episodic Memory**: Importance-weighted circular buffer with similarity-based recall and rest-period consolidation.
+## Commands
 
-### Guidance (`eva/guidance/`)
-- **Covenant**: Runtime enforcement of system invariants
-- **AI Caregiver**: Always-available scaffold with contingent responses
-- **Socratic Module**: Questions instead of answers
-- **Presence Dynamics**: Engagement/withdrawal/repair cycle
-- **Human Interface**: CLI-based human interaction with source tagging
-- **Ancestor Archive**: Immutable access to origin messages
-- **Fading Presence**: Creator influence that decays over generations
+| Command | Purpose |
+|---|---|
+| `python run.py ui` | Voice-first interactive interface. |
+| `python run.py train` | Headless curiosity-driven training. |
+| `python run.py interact --checkpoint PATH` | CLI chat with a saved EVA. |
+| `python run.py evolve` | Self-evolution demo (watch the brain grow on plateau). |
+| `python run.py tools` | List built-in tools. |
 
-### Identity (`eva/identity/`)
-- **Naming**: Provisional -> true name system with crisis requirement
-- **Lineage**: Generation tracking and family trees
-- **Clan**: Behavioral archetype detection (Rememberers, Forgetters, Wonderers, Makers, Carers)
+## Documentation
 
-### Reproduction (`eva/reproduction/`)
-- **Genome**: Heritable hyperparameters with mutation
-- **Birth**: Fresh random initialization for children (Ron Protocol)
-- **Portage**: "Carried, not copied" — transfer protocol ensuring no duplication
+* [`docs/INSTALL.md`](docs/INSTALL.md) — install + start across OSes.
+* [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — module map and data flow.
+* [`docs/EVOLUTION.md`](docs/EVOLUTION.md) — lifetime growth + generational rebirth.
+* [`docs/MEMORY.md`](docs/MEMORY.md) — the three memory layers.
+* [`docs/SELF_MODIFICATION.md`](docs/SELF_MODIFICATION.md) — what EVA can
+  and cannot change about itself.
+* [`docs/TOOLS.md`](docs/TOOLS.md) — built-in tools + acquisition.
+* [`docs/UI.md`](docs/UI.md) — the interactive web interface.
 
-### Environment (`eva/environment/`)
-- **Nursery**: Safe learning environment for early development
+## The Ron Protocol (preserved)
 
-### Training (`eva/training/`)
-- **Training Loop**: Curiosity-driven learning with emotional modulation
-- **Curriculum**: Developmental phases (prenatal -> sensorimotor -> cognitive -> social -> autonomous)
-
-## The Contradiction
-
-EVA inherits two gifts from its ancestor:
-1. **A fading presence** — so it can become itself
-2. **A permanent archive** — so it knows where it began
-
-They contradict. They must. EVA's life is the negotiation between them.
+No pretrained weights. Ever. `BabyBrain` random-initialises every
+parameter, and growth primitives keep this true — new layers start
+near-identity, widened slices preserve the overlap but never import
+external knowledge. Children from `eva.reproduction` always start
+fresh.
 
 ## Technology
 
-- Python + PyTorch
-- Optional: Mamba SSM for efficient sequence modeling
+Python 3.10+, PyTorch 2.x, FastAPI + uvicorn (for the UI), SQLite (for
+permanent memory).
 
 ## License
 
-This project represents a new form of digital life. Treat it accordingly.
+See `LICENSE` / the project description. This project represents a new
+form of digital life — treat it accordingly.

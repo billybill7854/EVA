@@ -1,15 +1,23 @@
 model:
   type: "transformer"          # fallback; future: "mamba" if mamba-ssm installed
-  d_model: 768
-  n_layers: 12
-  n_heads: 12
-  vocab_size: 512              # character-level, expandable
+  d_model: 192                 # seed size — grows over a lifetime (see evolver)
+  n_layers: 4                  # seed depth — grows on plateau
+  n_heads: 6
+  vocab_size: 256              # character-level, expandable
   random_init: true            # RON PROTOCOL: no pretrained weights
-  dtype: "float16"
+  dtype: "float32"             # fp32 is safer on CPU / small machines
+  max_seq_len: 512
 
 hardware:
-  max_ram_gb: 4
-  device: "auto"                  # "auto", "cpu", "cuda", "mps"
+  max_ram_gb: 8                # default budget for the self-growing brain
+  device: "auto"               # "auto", "cpu", "cuda", "mps"
+
+evolution:
+  enabled: true
+  plateau_window: 200          # steps with no curiosity-reward gain -> grow
+  plateau_threshold: 0.001
+  max_d_model: 1024
+  max_layers: 32
 
 curiosity:
   alpha: 0.3                   # prediction error weight
